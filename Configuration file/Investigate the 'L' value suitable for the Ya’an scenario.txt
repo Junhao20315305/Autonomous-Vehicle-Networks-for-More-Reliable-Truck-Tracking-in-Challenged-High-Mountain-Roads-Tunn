@@ -1,0 +1,140 @@
+## Scenario settings
+#Name of the Scenario
+Scenario.name = [\
+packageTracking_SprayAndWait_L5;\
+packageTracking_SprayAndWait_L10;\
+packageTracking_SprayAndWait_L20;\
+packageTracking_SprayAndWait_L30;\
+packageTracking_SprayAndWait_L40;\
+]
+
+Scenario.simulateConnections = true
+Scenario.updateInterval = 0.1
+
+#Time of duration
+#86400s=24 hours
+Scenario.endTime = 28800
+
+# WiFi Interface
+wifiInterface.type = SimpleBroadcastInterface
+#Transmit speed of WiFi
+wifiInterface.transmitSpeed = 7.5M
+#Range of WiFi
+wifiInterface.transmitRange = 100 
+
+# Long range & High speed Interface(Base Station)
+longRangeInterface.type = SimpleBroadcastInterface
+longRangeInterface.transmitSpeed = 15M
+longRangeInterface.transmitRange = 600
+
+#SprayAndWait Router Setting
+#Number of copies of the message (L)
+SprayAndWaitRouter.nrofCopies = [\5;\10;\20;\30;\40;\] 
+#true=Binary，false=Vanila    
+SprayAndWaitRouter.binaryMode = true
+
+# Settings applied to all groups
+Group.router =[\
+SprayAndWaitRouter;\
+]     
+
+# Common settings for all groups(nodes)
+Group.bufferSize = 10M
+Group.nrofInterfaces = 1
+Group.interface1 = wifiInterface
+Group.msgTtl = 240
+
+# Number of node groups: BS, Trucks（package), Pedestrian, Freighter, Vehicle
+Scenario.nrofHostGroups = 6
+
+# Base Station in the town
+# Base Station 1
+Group1.groupID = bs
+Group1.bufferSize = 5000M
+Group.nrofHosts = 1
+Group1.movementModel = StationaryMovement
+Group1.nodeLocation = 9600,10000
+Group1.nrofInterfaces = 1
+Group1.interface1 = longRangeInterface
+
+# Base Station 2
+Group2.groupID = bs
+Group2.bufferSize = 5000M
+Group2.nrofHosts = 1
+Group2.movementModel = StationaryMovement
+Group2.nodeLocation = 5180,10393
+Group2.nrofInterfaces = 1
+Group2.interface1 = longRangeInterface
+
+# Trucks（package）
+Group3.groupID = Truck
+Group3.bufferSize = 20M
+Group3.nrofHosts = 20
+Group3.movementModel = ShortestPathMapBasedMovement
+Group3.okMaps = 2
+Group3.speed = 3, 14.5
+Group3.nrofInterfaces = 1
+Group3.interface1 = wifiInterface
+
+# Pedestrian
+Group4.groupID = p
+Group4.bufferSize = 20M
+Group4.nrofHosts = 20
+Group4.movementModel = ShortestPathMapBasedMovement
+Group4.okMaps = 3
+Group4.speed = 1.5, 2.5
+Group4.nrofInterfaces = 1
+Group4.interface1 = wifiInterface
+
+# Freighter
+Group5.groupID = f
+Group5.bufferSize = 20M
+Group5.nrofHosts = 5
+Group5.movementModel = ShortestPathMapBasedMovement
+Group5.okMaps = 4
+Group5.speed = 5, 16
+Group5.nrofInterfaces = 1
+Group5.interface1 = wifiInterface
+
+# Vehicle
+Group6.groupID = v
+Group6.bufferSize = 20M
+Group6.nrofHosts = 30
+Group6.movementModel = ShortestPathMapBasedMovement
+Group6.okMaps = 5
+Group6.speed = 4, 20
+Group6.nrofInterfaces = 1
+Group6.interface1 = wifiInterface
+
+## Message creation parameters
+Events.nrof = 1
+Events1.class = MessageEventGenerator
+# One new message every 60 to 120 seconds
+Events1.interval = 60
+# Message sizes
+Events1.size = 10k,100k
+# range of message source/destination addresses
+Events1.hosts = 2,20
+Events1.toHosts = 0,1
+# Message ID prefix
+Events1.prefix = M
+
+## Movement model settings
+MovementModel.worldSize = 20000, 20000
+MovementModel.rngSeed = 1
+## Map based movement -movement model specific settings
+MapBasedMovement.nrofMapFiles = 5
+MapBasedMovement.mapFile1 = data/yaan/yaan.wkt
+MapBasedMovement.mapFile2 = data/yaan/truck_paths.wkt
+MapBasedMovement.mapFile3 = data/yaan/pedestrian_paths.wkt
+MapBasedMovement.mapFile4 = data/yaan/freighter_paths.wkt
+MapBasedMovement.mapFile5 = data/yaan/vehicle_paths.wkt
+
+## Reports
+Report.nrofReports = 1
+Report.reportDir = reports/Experiment3/
+Report.report1 = MessageStatsReport
+
+# Optimisation Settings
+Optimization.cellSizeMult = 1
+Optimization.randomizeUpdateOrder = true
